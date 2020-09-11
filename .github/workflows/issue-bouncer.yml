@@ -1,0 +1,36 @@
+name: Bounce issues from public repo to private repo
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  issue-label-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check trigger label
+        if: ${{ !contains(github.event.issue.labels.*.name, 'Staff Report') }}
+        run: |
+            echo "No trigger label found, aborting workflow (not an error!)"
+            exit 1
+      - name: Set up Python3
+        if: ${{ success() }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.7"
+      - name: Checkout this repo
+        if: ${{ success() }}
+        uses: actions/checkout@v2
+      - name: Run the python3 script for this action
+        if: ${{ success() }}
+        env:
+          # where the bounced issue came from
+          SRC_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SRC_REPO_ISSUE: ${{ github.event.issue.number }}
+          # where the bounced issue will go
+          DST_REPO: 'ekoparty2020/ekoparty-internal'
+          DST_REPO_TOKEN: ${{ secrets.INTERNAL_TOKEN }}
+        run: |
+          # external report to internal report
+          pip3 install pyGithub
+          pip3 install sh
+          python3 .github/workflows/issue-bouncer.py
