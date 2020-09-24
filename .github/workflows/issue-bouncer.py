@@ -30,18 +30,10 @@ def run():
     # bounce a comment back to the src issue
     src_issue.create_comment('Thank you for submitting a staff report! This issue will be filed to the internal ekoparty2020 staff repo and triaged ASAP!')
 
-    labels = []
-    for label in src_issue.labels:
-        labels.append(label.name)
-    if 'Staff Report' not in labels:
-        # update the source issue title and make contents private
-        src_issue.edit(title="This issue has NOT been filed with staff internal repo!", body='', state='closed')
-        return 0
-    else:
-        # bounce the issue through to the internal repo
-        dst_repo.create_issue(title=src_issue.title, body=src_issue.body, labels=[dst_repo.get_label('Staff Report')])
-        # update the source issue title and make contents private
-        src_issue.edit(title="This issue has been filed with staff internal repo! Thanks!", body='', state='closed')
+    # bounce the issue through to the internal repo
+    dst_repo.create_issue(title=src_issue.title, body=src_issue.body, labels=[dst_repo.get_label('Staff Report')])
+    # update the source issue title and make contents private
+    src_issue.edit(title="This issue has been filed with staff internal repo! Thanks!", body='', state='closed')
 
     return 0
 
