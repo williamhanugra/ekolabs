@@ -7,11 +7,11 @@ jobs:
   issue-label-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Check trigger label
-        if: ${{ !contains(github.event.issue.labels.*.name, 'Staff Report') }}
-        run: |
-            echo "No trigger label found, aborting workflow (not an error!)"
-            exit 1
+      # - name: Check trigger label
+      #   if: ${{ !contains(github.event.issue.labels.*.name, 'Staff Report') }}
+      #   run: |
+      #       echo "No trigger label found, aborting workflow (not an error!)"
+      #       exit 1
       - name: Set up Python3
         if: ${{ success() }}
         uses: actions/setup-python@v1
